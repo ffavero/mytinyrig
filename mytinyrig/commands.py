@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import yaml
 import operator
 import argparse
+from mytinyrig.misc import package_files
 from mytinyrig import nicehash
 from mytinyrig import __version__, __config__
 
@@ -41,10 +43,12 @@ def main():
 
         stats = nicehash.parse_stats(data)
         MY_RIGS = __config__.MY_RIGS
-        print MY_RIGS
-
-        #res = get_rig_stats(, stats)
-        #for r in res:
-        #    print '%s: daily: %f mBTC/day' % (r[0], r[1])
+        rigs = package_files(MY_RIGS, '.yaml')
+        for rig in rigs:
+            res = get_rig_stats(rig, stats)
+            print('\t - Profitability for rig %s:' %
+                os.path.splitext(os.path.split(rig)[1])[0])
+            for r in res:
+                print ('%s: daily: %f mBTC/day' % (r[0], r[1]))
 if __name__ == "__main__":
     main()

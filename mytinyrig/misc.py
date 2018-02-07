@@ -21,3 +21,10 @@ def try_import(path, module_name):
                              'the directory in the desired path.') %
                             os.path.join(path, module_name))
     return mod
+
+
+def package_files(package, extension):
+    pathname = package.__path__[0]
+    return set([os.path.abspath(os.path.join(pathname, file))
+                for file in os.listdir(pathname)
+                if file.endswith(extension)])

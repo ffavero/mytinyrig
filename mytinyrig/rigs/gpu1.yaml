@@ -1,92 +1,92 @@
 hashrate:
 - command: ''
-  name: Scrypt
+  name: scrypt
   speed: 400000
 - command: ''
-  name: SHA256
+  name: sha256
   speed: 0
 - command: '/home/francesco/src/tpruvot/ccminer/ccminer -a scrypt:10 -o stratum+tcp://scryptnf.eu.nicehash.com:3335 -u 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.ccscryptn -p XXX'
-  name: ScryptNf
+  name: scryptnf
   speed: 180000
 - command: ''
-  name: X11
+  name: x11
   speed: 0
 - command: ''
-  name: X13
+  name: x13
   speed: 0
 - command: ''
-  name: Keccak
+  name: keccak
   speed: 0
 - command: ''
-  name: X15
+  name: x15
   speed: 0
 - command: ''
-  name: Nist5
+  name: nist5
   speed: 0
 - command: '/home/francesco/src/ccminer/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.eu.nicehash.com:3341 -u 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.ccneo -p XXX -i 16.8'
-  name: NeoScrypt
+  name: neoscrypt
   speed: 460000
 - command: ''
-  name: Lyra2RE
+  name: lyra2re
   speed: 0
 - command: ''
-  name: WhirlpoolX
+  name: whirlpoolx
   speed: 0
 - command: ''
-  name: Qubit
+  name: qubit
   speed: 0
 - command: ''
-  name: Quark
+  name: quark
   speed: 0
 - command: ''
-  name: Axiom
+  name: axiom
   speed: 0
 - command: ''
-  name: Lyra2REv2
+  name: lyra2rev2
   speed: 14500000
 - command: ''
-  name: ScryptJaneNf16
+  name: scryptjanenf16
   speed: 0
 - command: ''
-  name: Blake256r8
+  name: blake256r8
   speed: 0
 - command: ''
-  name: Blake256r14
+  name: blake256r14
   speed: 1050000000
 - command: ''
-  name: Blake256r8vnl
+  name: blake256r8vnl
   speed: 0
 - command: ''
-  name: Hodl
+  name: hodl
   speed: 0
 - command: ''
-  name: DaggerHashimoto
+  name: daggerhashimoto
   speed: 11300000
 - command: ''
-  name: Decred
+  name: decred
   speed: 0
 - command: ''
-  name: CryptoNight
+  name: cryptonight
   speed: 300
 - command: ''
-  name: Lbry
+  name: lbry
   speed: 110000000
 - command: ''
-  name: Equihash
+  name: equihash
   speed: 180
 - command: ''
-  name: Pascal
+  name: pascal
   speed: 380000000
 - command: '/home/francesco/src/tpruvot/ccminer/ccminer -a sib -o stratum+tcp://x11gost.eu.nicehash.com:3359 -u 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.ccx11g -p XXX -i 18'
-  name: X11Gost
+  name: x11gost
   speed: 4000000
 - command: ''
-  name: Sia
+  name: sia
   speed: 0
 - command: ''
-  name: Blake2s
+  name: blake2s
   speed: 0
 - command: ''
-  name: Skunk
+  name: skunk
   speed: 11500000
 
