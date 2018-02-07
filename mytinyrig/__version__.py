@@ -1,0 +1,5 @@
+VERSION = "0.0.1"
+DATE = "6 February 2018"
+AUTHOR = "Favero Francesco"
+MAIL = "favero.francesco@gmail.com"
+WEBSITE = ""
