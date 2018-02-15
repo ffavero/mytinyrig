@@ -25,11 +25,8 @@ class process:
     def pid(self):
         return self.proc.pid
 
-    def kill(self):
-        os.killpg(self.proc.pid, signal.SIGTERM)
-
     def close(self):
-        kill_subproc(self.proc)
+        self.proc.kill()
         self.proc.stdout.close()
 
 
@@ -109,8 +106,8 @@ class worker:
         else:
             self.parentlog.info('switch to mining %s' % self.profit[0]['name'])
             if self.running is not None:
-                self.log.info('Terminate process %s' % self.process.pid)
-                self.process.kill()
+                self.log.info('Terminate process %s' % self.process.pid())
+                self.process.proc.kill()
                 self.stream_log.terminate()
             self.start_process(self.profit[0]['name'])
             self.stream_log = Process(target=log_worker,
