@@ -12,7 +12,7 @@ class log:
         self.log = logging.getLogger(name)
         self.log_file = '%s.log' % self.__path__
         formatter = logging.Formatter(
-            '%(levelname)s : %(asctime)s : %(message)s')
+            self.__name__ + ': %(levelname)s : %(asctime)s : %(message)s')
         fileHandler = RotatingFileHandler(
             self.log_file, mode='a', maxBytes=1e6, backupCount=5)
         fileHandler.setFormatter(formatter)
