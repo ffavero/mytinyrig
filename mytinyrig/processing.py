@@ -1,4 +1,5 @@
 from mytinyrig import nicehash
+from mytinyrig.logs import log
 import subprocess
 import operator
 import signal
@@ -12,8 +13,9 @@ class process:
 
     def __init__(self, command):
         command = shlex.split(command)
-        self.proc = subprocess.Popen(command, stdout=subprocess.PIPE,
-                                     bufsize=4096)
+        self.proc = subprocess.Popen(command,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            bufsize=4096)
 
     def __iter__(self):
         for line in self.proc.stdout:
@@ -32,8 +34,10 @@ class process:
 
 class polls:
 
-    def __init__(self, workers_conf, api, timeout):
+    def __init__(self, workers_conf, api, timeout, logdir):
         self.api = api
+        self.logdir = logdir
+        self.log = log('mytinyrig', self.logdir).log
         self.workers_conf = workers_conf
         self.timeout = timeout
         self.stats = None
@@ -42,13 +46,15 @@ class polls:
 
     def start(self):
         while True:
-            print('going')
             self.refresh_stats()
             for worker in self.workers:
                 worker.set_profit(self.stats)
                 worker.check_running()
-                print  (worker.name, worker.running,
-                    worker.profit[0], worker.commands[worker.running])
+                line = 'Mining %s at worker %s: %f mBTC/day' % (
+                    worker.running, worker.name, worker.profit[0]['mbtc'])
+                self.log.info(line)
+                #print (worker.name, worker.running,
+                #    worker.profit[0], worker.commands[worker.running])
             time.sleep(self.timeout)
 
     def refresh_stats(self):
@@ -57,7 +63,7 @@ class polls:
             self.stats = nicehash.parse_stats(data)
         except IOError:
             if self.stats is None:
-                print('retrying API in 5 seconds')
+                self.log.warning('retrying API in 5 seconds')
                 time.sleep(5)
                 self.refresh_stats()
             else:
@@ -66,12 +72,14 @@ class polls:
     def set_workers(self):
         self.workers = list()
         for conf in self.workers_conf:
-            self.workers.append(worker(conf))
+            self.workers.append(worker(conf, self.logdir, self.log))
 
 class worker:
 
-    def __init__(self, conf):
+    def __init__(self, conf, logdir, parentlog):
         self.running = None
+        self.logdir = logdir
+        self.parentlog = parentlog
         self.conf = conf
         self.name = os.path.splitext(
             os.path.split(self.conf)[1])[0]
@@ -96,9 +104,9 @@ class worker:
 
     def check_running(self):
         if self.running == self.profit[0]['name']:
-            print 'keep mining %s' % self.running
+            self.parentlog.info('keep mining %s' % self.running)
         else:
-            print 'switch to mining %s' % self.profit[0]['name']
+            self.parentlog.info('switch to mining %s' % self.profit[0]['name'])
             self.running = self.profit[0]['name']
 
     def process(self, algo):
