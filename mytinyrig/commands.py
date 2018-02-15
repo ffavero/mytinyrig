@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import argparse
 from mytinyrig.processing import polls
 from mytinyrig.misc import package_files
@@ -23,6 +24,9 @@ def main():
     parser.add_argument('-t', '--time',  dest='poltime',
                         help='Polling time in minutes',
                         type=int, default=30)
+    parser.add_argument('-l', '--logdir',  dest='logdir',
+                        help='Logs output folder',
+                        type=str, default=os.getcwd())
     args = parser.parse_args()
    
     api='https://api.nicehash.com/api?method=simplemultialgo.info'
@@ -33,7 +37,7 @@ def main():
     else:
         MY_WORKERS = __config__.MY_WORKERS
         workers = package_files(MY_WORKERS, '.yaml')
-        p = polls(workers, api, polling_time)
+        p = polls(workers, api, polling_time, args.logdir)
         p.start()
 
 
