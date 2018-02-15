@@ -59,21 +59,21 @@ hashrate:
 - command: ''
   name: hodl
   speed: 0
-- command: ''
+- command: '/home/francesco/src/ethminer/build/ethminer/ethminer -O 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.eth:XXX -SP 2 -S daggerhashimoto.eu.nicehash.com:3353 -U --cuda-parallel-hash 5'
   name: daggerhashimoto
-  speed: 11300000
+  speed: 14100000
 - command: ''
   name: decred
-  speed: 0
+  speed: 140000000
 - command: ''
   name: cryptonight
   speed: 300
 - command: ''
   name: lbry
   speed: 110000000
-- command: ''
+- command: '/home/francesco/src/cuda/zm/zm --server equihash.eu.nicehash.com --port 3357 --user 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.zm --pass XXX'
   name: equihash
-  speed: 180
+  speed: 185
 - command: ''
   name: pascal
   speed: 380000000
@@ -82,7 +82,7 @@ hashrate:
   speed: 4000000
 - command: ''
   name: sia
-  speed: 0
+  speed: 140000000
 - command: ''
   name: blake2s
   speed: 0

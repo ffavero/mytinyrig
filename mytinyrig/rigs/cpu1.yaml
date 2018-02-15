@@ -56,7 +56,7 @@ hashrate:
 - command: ''
   name: blake256r8vnl
   speed: 21900000
-- command: ''
+- command: '/home/francesco/src/myforks/cpuminer-opt/cpuminer -a hodl -O 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.hodl:XXX -o stratum+tcp://hodl.eu.nicehash.com:3352 -t 4 -b 0'
   name: hodl
   speed: 238
 - command: ''
