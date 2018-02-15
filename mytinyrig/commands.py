@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
-import yaml
-import operator
 import argparse
+from mytinyrig.processing import polls
 from mytinyrig.misc import package_files
-from mytinyrig import nicehash
 from mytinyrig import __version__, __config__
 
 VERSION = __version__.VERSION
@@ -15,40 +12,30 @@ AUTHOR = __version__.AUTHOR
 MAIL = __version__.MAIL
 
 
-def get_rig_stats(rig_hashrate, stats):
-    res = dict()
-    with open(rig_hashrate, 'rb') as rig_yaml:
-        try:
-             data = yaml.load(rig_yaml)
-        except yaml.YAMLError as exc:
-            raise(exc)
-    for algo in data['hashrate']:
-        res[algo['name']] = algo['speed'] * stats[algo['name']] / 1e6
-    return(sorted(res.items(), key=operator.itemgetter(1), reverse=True))
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--dump',  dest='dump',
-                        help='Dump an empty yaml file',
+                        help='Dump an empty yaml rig file',
                         action='store_true')
+    parser.add_argument('-w', '--wallet',  dest='wallet',
+                        help='Nicehash wallet address', type=str,
+                        default='3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw')
+    parser.add_argument('-t', '--time',  dest='poltime',
+                        help='Polling time in minutes',
+                        type=int, default=30)
     args = parser.parse_args()
    
     api='https://api.nicehash.com/api?method=simplemultialgo.info'
 
-    data = nicehash.get_api(api)
-
+    polling_time = args.poltime #* 60
     if args.dump is True:
         print yaml.safe_dump(nicehash.dump_empy(data), default_flow_style=False)
     else:
+        MY_WORKERS = __config__.MY_WORKERS
+        workers = package_files(MY_WORKERS, '.yaml')
+        p = polls(workers, api, polling_time)
+        p.start()
 
-        stats = nicehash.parse_stats(data)
-        MY_RIGS = __config__.MY_RIGS
-        rigs = package_files(MY_RIGS, '.yaml')
-        for rig in rigs:
-            res = get_rig_stats(rig, stats)
-            print('\t - Profitability for rig %s:' %
-                os.path.splitext(os.path.split(rig)[1])[0])
-            for r in res:
-                print ('%s: daily: %f mBTC/day' % (r[0], r[1]))
+
 if __name__ == "__main__":
     main()
