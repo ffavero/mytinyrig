@@ -28,10 +28,10 @@ def main():
                         help='Logs output folder',
                         type=str, default=os.getcwd())
     args = parser.parse_args()
-   
+
     api='https://api.nicehash.com/api?method=simplemultialgo.info'
 
-    polling_time = args.poltime #* 60
+    polling_time = args.poltime * 60
     if args.dump is True:
         print yaml.safe_dump(nicehash.dump_empy(data), default_flow_style=False)
     else:
