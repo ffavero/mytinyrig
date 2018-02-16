@@ -65,7 +65,7 @@ hashrate:
 - command: ''
   name: decred
   speed: 14980000
-- command: ''
+- command: '/home/francesco/src/xmr-stak/build/bin/xmr-stak --cpu /home/francesco/src/xmr-stak/build/cpu.txt --config /home/francesco/src/xmr-stak/build/config.txt --noNVIDIA'
   name: cryptonight
   speed: 190
 - command: ''
