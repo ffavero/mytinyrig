@@ -1,7 +1,7 @@
 from setuptools import setup
 import sys
 
-from uminer import __version__
+from mytinyrig import __version__
 
 VERSION = __version__.VERSION
 DATE = __version__.DATE
