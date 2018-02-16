@@ -25,7 +25,8 @@ setup(
     author_email=MAIL,
     url=WEBSITE,
     license='GPLv3',
-    packages=['mytinyrig'],
+    packages=['mytinyrig', 'mytinyrig.workers'],
+    package_data={'mytinyrig.workers': ['*.yaml']},
     entry_points={
         'console_scripts': ['mytinyrig = mytinyrig.commands:main']
     },
