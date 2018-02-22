@@ -56,7 +56,7 @@ hashrate:
 - command: ''
   name: blake256r8vnl
   speed: 21900000
-- command: '/home/francesco/src/myforks/cpuminer-opt/cpuminer -a hodl -O %(wallet)s.hodl:XXX -o stratum+tcp://%(url)s:%(port)i -t 4 -b 0'
+- command: 'cpuminer -a hodl -O %(wallet)s.%(worker)s:XXX -o stratum+tcp://%(url)s:%(port)i -t 4 -b 0'
   name: hodl
   speed: 238
 - command: ''
@@ -65,7 +65,7 @@ hashrate:
 - command: ''
   name: decred
   speed: 14980000
-- command: '/home/francesco/src/xmr-stak/build/bin/xmr-stak --cpu /home/francesco/src/xmr-stak/build/cpu.txt --config /home/francesco/src/xmr-stak/build/config.txt --noNVIDIA'
+- command: 'xmr-stak --noNVIDIA --noAMD -o %(url)s:%(port)i -u %(wallet)s.%(worker)s -p XXX --use-nicehash --currency monero'
   name: cryptonight
   speed: 190
 - command: ''
@@ -89,4 +89,3 @@ hashrate:
 - command: ''
   name: skunk
   speed: 509000
-
