@@ -1,5 +1,4 @@
 from setuptools import setup
-import sys
 
 from mytinyrig import __version__
 
@@ -20,7 +19,8 @@ setup(
     name='mytinyrig',
     version=VERSION,
     description='Manage miner and NiceHash automatic switch',
-    long_description='Mine the most profitable coin in NiceHash with whatever command you like',
+    long_description=('NiceHash best profitable algorith switch - mine with '
+                      'whatever command you like'),
     author=AUTHOR,
     author_email=MAIL,
     url=WEBSITE,

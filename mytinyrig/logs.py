@@ -2,6 +2,7 @@ import os
 from logging.handlers import RotatingFileHandler
 import logging
 
+
 class log:
 
     def __init__(self, name, path, level=logging.INFO):

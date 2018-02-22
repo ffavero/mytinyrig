@@ -3,7 +3,6 @@ from mytinyrig.logs import log
 from multiprocessing import Process
 import subprocess
 import operator
-import signal
 import shlex
 import time
 import yaml
@@ -14,9 +13,9 @@ class process:
 
     def __init__(self, command):
         command = shlex.split(command)
-        self.proc = subprocess.Popen(command,
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            bufsize=4096)
+        self.proc = subprocess.Popen(
+            command, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, bufsize=4096)
 
     def __iter__(self):
         for line in iter(self.proc.stdout.readline, ''):
@@ -51,7 +50,7 @@ class polls:
                 line = 'Mining %s at worker %s: %f mBTC/day' % (
                     worker.running, worker.name, worker.profit[0]['mbtc'])
                 self.log.info(line)
-                #print (worker.name, worker.running,
+                # print (worker.name, worker.running,
                 #    worker.profit[0], worker.commands[worker.running])
             time.sleep(self.timeout)
 
@@ -71,6 +70,7 @@ class polls:
         self.workers = list()
         for conf in self.workers_conf:
             self.workers.append(worker(conf, self.logdir, self.log))
+
 
 class worker:
 
@@ -111,12 +111,13 @@ class worker:
                 self.stream_log.terminate()
             self.start_process(self.profit[0]['name'])
             self.stream_log = Process(target=log_worker,
-                args=(self.process, self.log, ))
+                                      args=(self.process, self.log, ))
             self.stream_log.start()
             self.running = self.profit[0]['name']
 
     def start_process(self, algo):
         self.process = process(self.commands[algo])
+
 
 def get_stats(conf_data, stats):
     res = dict()
@@ -124,11 +125,13 @@ def get_stats(conf_data, stats):
         res[algo['name']] = algo['speed'] * stats[algo['name']] / 1e6
     return(sorted(res.items(), key=operator.itemgetter(1), reverse=True))
 
+
 def get_commands(conf_data):
     res = dict()
     for algo in conf_data['hashrate']:
         res[algo['name']] = algo['command']
     return res
+
 
 def log_worker(process, log):
     for line in process:
