@@ -3,7 +3,7 @@ from logging.handlers import RotatingFileHandler
 import logging
 
 
-class log:
+class mytinylog:
 
     def __init__(self, name, path, level=logging.INFO):
         self.__name__ = name

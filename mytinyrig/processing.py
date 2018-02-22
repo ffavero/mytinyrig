@@ -1,5 +1,7 @@
+from __future__ import division
+
 from mytinyrig import nicehash
-from mytinyrig.logs import log
+from mytinyrig.logs import mytinylog
 from multiprocessing import Process
 import subprocess
 import operator
@@ -31,10 +33,14 @@ class process:
 
 class polls:
 
-    def __init__(self, workers_conf, api, timeout, logdir):
+    def __init__(self, workers_conf, api, timeout,
+                 n, wallet, region, logdir):
+        self.n = n
+        self.wallet = wallet
+        self.region = region
         self.api = api
         self.logdir = logdir
-        self.log = log('mytinyrig', self.logdir).log
+        self.log = mytinylog('mytinyrig', self.logdir).log
         self.workers_conf = workers_conf
         self.timeout = timeout
         self.stats = None
@@ -69,15 +75,19 @@ class polls:
     def set_workers(self):
         self.workers = list()
         for conf in self.workers_conf:
-            self.workers.append(worker(conf, self.logdir, self.log))
+            self.workers.append(
+                worker(conf, self.stats, self.n,  self.wallet,
+                       self.region, self.logdir, self.log))
 
 
 class worker:
 
-    def __init__(self, conf, logdir, parentlog):
+    def __init__(self, conf, stats, n, wallet,
+                 region, logdir, parentlog):
         self.running = None
         self.logdir = logdir
         self.conf = conf
+        self.n = n
         self.name = os.path.splitext(
             os.path.split(self.conf)[1])[0]
         with open(self.conf, 'rb') as conf_yaml:
@@ -85,9 +95,9 @@ class worker:
                 self.conf_data = yaml.load(conf_yaml)
             except yaml.YAMLError as exc:
                 raise(exc)
-        self.log = log(self.name, self.logdir).log
+        self.log = mytinylog(self.name, self.logdir).log
         self.parentlog = parentlog
-        self.commands = get_commands(self.conf_data)
+        self.commands = get_commands(self.conf_data, stats, wallet, region)
 
     def set_profit(self, stats):
         profit = list()
@@ -119,20 +129,57 @@ class worker:
         self.process = process(self.commands[algo])
 
 
+class statspay:
+
+    def __init__(self, n):
+        self.n = n
+        self.pays = list()
+
+    def add(self, value):
+        self.pays.append(value)
+        if len(self.pays) > self.n:
+            del self.pays[0]
+
+    def mean(self):
+        return sum(self.pays) / len(self.pays)
+
+
 def get_stats(conf_data, stats):
+    res = dict()
+    for algo in conf_data['hashrate']:
+        res[algo['name']] = algo['speed'] * stats[algo['name']]['pay'] / 1e6
+    return(sorted(res.items(), key=operator.itemgetter(1), reverse=True))
+
+
+def grow_stats(conf_data, stats, paytates):
     res = dict()
     for algo in conf_data['hashrate']:
         res[algo['name']] = algo['speed'] * stats[algo['name']] / 1e6
     return(sorted(res.items(), key=operator.itemgetter(1), reverse=True))
 
 
-def get_commands(conf_data):
+def get_commands(conf_data, stats, wallet, region):
     res = dict()
     for algo in conf_data['hashrate']:
-        res[algo['name']] = algo['command']
+        algo_name = algo['name']
+        port = stats[algo_name]['port']
+        nicehash_url = '%(algo)s.%(region)s.nicehash.com' % {
+            'algo': algo_name, 'region': region}
+        command = algo['command'] % {
+            'url': nicehash_url, 'port': port, 'wallet': wallet}
+        res[algo_name] = command
     return res
 
 
 def log_worker(process, log):
     for line in process:
         log.info(line)
+
+
+def dump_yaml(api):
+    try:
+        data = data = nicehash.get_api(api)
+    except IOError:
+        Exception('API is not available, retrying later.')
+    return yaml.safe_dump(nicehash.dump_empy(data),
+                          default_flow_style=False)

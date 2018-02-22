@@ -3,7 +3,7 @@
 
 import os
 import argparse
-from mytinyrig.processing import polls
+from mytinyrig.processing import polls, dump_yaml
 from mytinyrig.misc import package_files
 from mytinyrig import __version__, __config__
 
@@ -21,25 +21,35 @@ def main():
     parser.add_argument('-w', '--wallet',  dest='wallet',
                         help='Nicehash wallet address', type=str,
                         default='3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw')
+    parser.add_argument('-r', '--region',  dest='region',
+                        help='Nicehash servers region', type=str,
+                        choices=['eu', 'usa', 'hk', 'jp', 'in', 'br'],
+                        default='eu')
     parser.add_argument('-t', '--time',  dest='poltime',
                         help='Polling time in minutes',
                         type=int, default=30)
+    parser.add_argument('-n', '--n-mean',  dest='n_avg',
+                        help=('Number of polls saved '
+                              'to compute the mean profitability'),
+                        type=int, default=5)
     parser.add_argument('-l', '--logdir',  dest='logdir',
                         help='Logs output folder',
                         type=str, default=os.getcwd())
+    parser.add_argument('-c', '--confdir',  dest='confdir',
+                        help=('Folder containing the worker ',
+                              'yaml configurations'), type=str)
     args = parser.parse_args()
 
     api = 'https://api.nicehash.com/api?method=simplemultialgo.info'
 
     polling_time = args.poltime * 60
     if args.dump is True:
-        print('TODO')
-        # print yaml.safe_dump(nicehash.dump_empy(data),
-        #                     default_flow_style=False)
+        print(dump_yaml(api))
     else:
-        MY_WORKERS = __config__.MY_WORKERS
+        MY_WORKERS = __config__.get_config(args.confdir)
         workers = package_files(MY_WORKERS, '.yaml')
-        p = polls(workers, api, polling_time, args.logdir)
+        p = polls(workers, api, polling_time,
+                  args.n_avg, args.wallet, args.region, args.logdir)
         p.start()
 
 
