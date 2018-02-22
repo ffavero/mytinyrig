@@ -169,7 +169,7 @@ def get_commands(conf_data, stats, wallet, region, worker_name):
         command = algo['command'] % {
             'url': nicehash_url, 'port': port,
             'wallet': wallet, 'worker': worker_name}
-        res[algo_name] = 'echo %s' % command
+        res[algo_name] = command
     return res
 
 
