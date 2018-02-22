@@ -97,7 +97,8 @@ class worker:
                 raise(exc)
         self.log = mytinylog(self.name, self.logdir).log
         self.parentlog = parentlog
-        self.commands = get_commands(self.conf_data, stats, wallet, region)
+        self.commands = get_commands(self.conf_data, stats,
+                                     wallet, region, self.name)
 
     def set_profit(self, stats):
         profit = list()
@@ -158,7 +159,7 @@ def grow_stats(conf_data, stats, paytates):
     return(sorted(res.items(), key=operator.itemgetter(1), reverse=True))
 
 
-def get_commands(conf_data, stats, wallet, region):
+def get_commands(conf_data, stats, wallet, region, worker_name):
     res = dict()
     for algo in conf_data['hashrate']:
         algo_name = algo['name']
@@ -166,8 +167,9 @@ def get_commands(conf_data, stats, wallet, region):
         nicehash_url = '%(algo)s.%(region)s.nicehash.com' % {
             'algo': algo_name, 'region': region}
         command = algo['command'] % {
-            'url': nicehash_url, 'port': port, 'wallet': wallet}
-        res[algo_name] = command
+            'url': nicehash_url, 'port': port,
+            'wallet': wallet, 'worker': worker_name}
+        res[algo_name] = 'echo %s' % command
     return res
 
 
