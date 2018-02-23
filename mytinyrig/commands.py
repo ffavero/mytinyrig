@@ -36,7 +36,7 @@ def main():
                         help='Logs output folder',
                         type=str, default=os.getcwd())
     parser.add_argument('-c', '--confdir',  dest='confdir',
-                        help=('Folder containing the worker ',
+                        help=('Folder containing the worker '
                               'yaml configurations'), type=str)
     args = parser.parse_args()
 
