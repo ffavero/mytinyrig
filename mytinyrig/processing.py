@@ -54,7 +54,8 @@ class polls:
                 worker.set_profit(self.stats)
                 worker.check_running()
                 line = 'Mining %s at worker %s: %f mBTC/day' % (
-                    worker.running, worker.name, worker.profit[0]['mbtc'])
+                    worker.running, worker.name,
+                    worker.profits[worker.running].mean())
                 self.log.info(line)
                 # print (worker.name, worker.running,
                 #    worker.profit[0], worker.commands[worker.running])
@@ -99,32 +100,33 @@ class worker:
         self.parentlog = parentlog
         self.commands = get_commands(self.conf_data, stats,
                                      wallet, region, self.name)
+        self.profits = dict()
+        for algo in self.commands:
+            self.profits[algo] = statspay(self.n)
 
     def set_profit(self, stats):
-        profit = list()
         res = get_stats(self.conf_data, stats)
         for r in res:
             if not self.commands[r[0]]:
                 pass
             elif r[1] > 0:
-                profit.append({
-                    'name': r[0], 'mbtc': r[1]})
-        self.profit = profit
+                self.profits[r[0]].add(r[1])
 
     def check_running(self):
-        if self.running == self.profit[0]['name']:
+        ranks = ranks_profits(self.profits)
+        if self.running == ranks[0][0]:
             self.parentlog.info('keep mining %s' % self.running)
         else:
-            self.parentlog.info('switch to mining %s' % self.profit[0]['name'])
+            self.parentlog.info('switch to mining %s' % ranks[0][0])
             if self.running is not None:
                 self.log.info('Terminate process %s' % self.process.pid())
                 self.process.proc.kill()
                 self.stream_log.terminate()
-            self.start_process(self.profit[0]['name'])
+            self.start_process(ranks[0][0])
             self.stream_log = Process(target=log_worker,
                                       args=(self.process, self.log, ))
             self.stream_log.start()
-            self.running = self.profit[0]['name']
+            self.running = ranks[0][0]
 
     def start_process(self, algo):
         self.process = process(self.commands[algo])
@@ -142,20 +144,24 @@ class statspay:
             del self.pays[0]
 
     def mean(self):
-        return sum(self.pays) / len(self.pays)
+        try:
+            return sum(self.pays) / len(self.pays)
+        except ZeroDivisionError:
+            return 0
 
 
 def get_stats(conf_data, stats):
-    res = dict()
+    res = list()
     for algo in conf_data['hashrate']:
-        res[algo['name']] = algo['speed'] * stats[algo['name']]['pay'] / 1e6
-    return(sorted(res.items(), key=operator.itemgetter(1), reverse=True))
+        res.append(
+            (algo['name'], algo['speed'] * stats[algo['name']]['pay'] / 1e6))
+    return res
 
 
-def grow_stats(conf_data, stats, paytates):
+def ranks_profits(paystats):
     res = dict()
-    for algo in conf_data['hashrate']:
-        res[algo['name']] = algo['speed'] * stats[algo['name']] / 1e6
+    for algo in paystats:
+        res[algo] = paystats[algo].mean()
     return(sorted(res.items(), key=operator.itemgetter(1), reverse=True))
 
 
@@ -169,7 +175,7 @@ def get_commands(conf_data, stats, wallet, region, worker_name):
         command = algo['command'] % {
             'url': nicehash_url, 'port': port,
             'wallet': wallet, 'worker': worker_name}
-        res[algo_name] = command
+        res[algo_name] = 'echo %s' % command
     return res
 
 
