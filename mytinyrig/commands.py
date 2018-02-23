@@ -16,7 +16,7 @@ MAIL = __version__.MAIL
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--dump',  dest='dump',
-                        help='Dump an empty yaml rig file',
+                        help='Print an empty yaml worker file',
                         action='store_true')
     parser.add_argument('-w', '--wallet',  dest='wallet',
                         help='Nicehash wallet address', type=str,
@@ -36,7 +36,7 @@ def main():
                         help='Logs output folder',
                         type=str, default=os.getcwd())
     parser.add_argument('-c', '--confdir',  dest='confdir',
-                        help=('Folder containing the worker '
+                        help=('Folder containing the workers '
                               'yaml configurations'), type=str)
     args = parser.parse_args()
 

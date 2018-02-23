@@ -36,9 +36,33 @@ This command will start polling every 5 minutes to NiceHash.
 The process starts the command specified in the config file mining the most profitable algo (according to specified hashrate in the config)
 
 
+### Arguments
+
+```
+mytinyrig -h
+usage: mytinyrig [-h] [-d] [-w WALLET] [-r {eu,usa,hk,jp,in,br}]
+                   [-t POLTIME] [-n N_AVG] [-l LOGDIR] [-c CONFDIR]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d, --dump            Print an empty yaml worker file
+  -w WALLET, --wallet WALLET
+                        Nicehash wallet address
+  -r {eu,usa,hk,jp,in,br}, --region {eu,usa,hk,jp,in,br}
+                        Nicehash servers region
+  -t POLTIME, --time POLTIME
+                        Polling time in minutes
+  -n N_AVG, --n-mean N_AVG
+                        Number of polls saved to compute the mean
+                        profitability
+  -l LOGDIR, --logdir LOGDIR
+                        Logs output folder
+  -c CONFDIR, --confdir CONFDIR
+                        Folder containing the workers yaml configurations
+```
+
 ## TODO
   - Benckmark function
-  - Implement waller as argument (tag replace in the command specified in the yaml conf)
 
 
 ## Other
