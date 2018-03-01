@@ -97,6 +97,7 @@ class worker:
             except yaml.YAMLError as exc:
                 raise(exc)
         self.log = mytinylog(self.name, self.logdir).log
+        self.log.propagate = False
         self.parentlog = parentlog
         self.commands = get_commands(self.conf_data, stats,
                                      wallet, region, self.name)
