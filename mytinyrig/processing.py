@@ -34,13 +34,14 @@ class process:
 class polls:
 
     def __init__(self, workers_conf, api, timeout,
-                 n, wallet, region, logdir):
+                 n, wallet, region, logdir, main_out, worker_out):
         self.n = n
         self.wallet = wallet
         self.region = region
         self.api = api
+        self.worker_out = worker_out
         self.logdir = logdir
-        self.log = mytinylog('mytinyrig', self.logdir).log
+        self.log = mytinylog('mytinyrig', self.logdir, main_out).log
         self.workers_conf = workers_conf
         self.timeout = timeout
         self.stats = None
@@ -57,8 +58,6 @@ class polls:
                     worker.running, worker.name,
                     worker.profits[worker.running].mean())
                 self.log.info(line)
-                # print (worker.name, worker.running,
-                #    worker.profit[0], worker.commands[worker.running])
             time.sleep(self.timeout)
 
     def refresh_stats(self):
@@ -78,13 +77,13 @@ class polls:
         for conf in self.workers_conf:
             self.workers.append(
                 worker(conf, self.stats, self.n,  self.wallet,
-                       self.region, self.logdir, self.log))
+                       self.region, self.logdir, self.log, self.worker_out))
 
 
 class worker:
 
     def __init__(self, conf, stats, n, wallet,
-                 region, logdir, parentlog):
+                 region, logdir, parentlog, dev_out):
         self.running = None
         self.logdir = logdir
         self.conf = conf
@@ -96,7 +95,7 @@ class worker:
                 self.conf_data = yaml.load(conf_yaml)
             except yaml.YAMLError as exc:
                 raise(exc)
-        self.log = mytinylog(self.name, self.logdir).log
+        self.log = mytinylog(self.name, self.logdir, dev_out).log
         self.parentlog = parentlog
         self.commands = get_commands(self.conf_data, stats,
                                      wallet, region, self.name)

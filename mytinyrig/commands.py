@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import argparse
 from mytinyrig.processing import polls, dump_yaml
 from mytinyrig.misc import package_files
@@ -48,9 +49,10 @@ def main():
     else:
         MY_WORKERS = __config__.get_config(args.confdir)
         workers = package_files(MY_WORKERS, '.yaml')
-        p = polls(workers, api, polling_time,
-                  args.n_avg, args.wallet, args.region, args.logdir)
-        p.start()
+        with open(os.devnull, 'w') as dev_null:
+            p = polls(workers, api, polling_time,
+                      args.n_avg, args.wallet, args.region, args.logdir, sys.stderr, dev_null)
+            p.start()
 
 
 if __name__ == "__main__":
