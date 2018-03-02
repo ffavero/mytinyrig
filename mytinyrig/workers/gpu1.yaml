@@ -5,7 +5,7 @@ hashrate:
 - command: ''
   name: sha256
   speed: 0
-- command: 'ccminer -a scrypt:10 -o stratum+tcp://scryptnf.eu.nicehash.com:3335 -u 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.ccscryptn -p XXX'
+- command: '/home/francesco/src/tpruvot/ccminer/ccminer -a scrypt:10 -o stratum+tcp://scryptnf.eu.nicehash.com:3335 -u 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.ccscryptn -p XXX'
   name: scryptnf
   speed: 180000
 - command: ''
@@ -23,7 +23,7 @@ hashrate:
 - command: ''
   name: nist5
   speed: 0
-- command: 'ccminer -a neoscrypt -o stratum+tcp://%(url)s:%(port)i  -u %(wallet)s.%(worker)s -p XXX -i 16.8'
+- command: '/home/francesco/src/ccminer/ccminer -a neoscrypt -o stratum+tcp://neoscrypt.eu.nicehash.com:3341 -u 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.ccneo -p XXX -i 16.8'
   name: neoscrypt
   speed: 460000
 - command: ''
@@ -59,7 +59,7 @@ hashrate:
 - command: ''
   name: hodl
   speed: 0
-- command: 'ethminer -O %(wallet)s.%(worker)s:XXX -SP 2 -S %(url)s:%(port)i -U'
+- command: '/home/francesco/src/ethminer/build/ethminer/ethminer -O 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.eth:XXX -SP 2 -S daggerhashimoto.eu.nicehash.com:3353 -U --cuda-parallel-hash 5'
   name: daggerhashimoto
   speed: 14100000
 - command: ''
@@ -71,13 +71,13 @@ hashrate:
 - command: ''
   name: lbry
   speed: 110000000
-- command: 'zm --server %(url)s --port %(port)i --user %(wallet)s.%(worker)s --pass XXX'
+- command: '/home/francesco/src/cuda/zm/zm_0.5.8/zm --server equihash.eu.nicehash.com --port 3357 --user 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.zm --pass XXX'
   name: equihash
   speed: 185
 - command: ''
   name: pascal
   speed: 380000000
-- command: 'ccminer -a sib -o stratum+tcp://%(url)s:%(port)i -u %(wallet)s.%(worker)s -p XXX -i 18'
+- command: '/home/francesco/src/tpruvot/ccminer/ccminer -a sib -o stratum+tcp://x11gost.eu.nicehash.com:3359 -u 3Dsuk4X67SBwcFjVxrnCcoXn8jyowRqScw.ccx11g -p XXX -i 18'
   name: x11gost
   speed: 4000000
 - command: ''
@@ -89,3 +89,4 @@ hashrate:
 - command: ''
   name: skunk
   speed: 11500000
+

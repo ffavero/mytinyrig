@@ -5,7 +5,12 @@ import logging
 
 class mytinylog:
 
-    def __init__(self, name, path, level=logging.INFO):
+    def __init__(self, name, path, dev_out, level='info'):
+        levels = {'debug': logging.DEBUG,
+            'info': logging.INFO,
+            'warning': logging.WARNING,
+            'error': logging.ERROR,
+            'critical': logging.CRITICAL}
         self.__name__ = name
         self.__path__ = os.path.abspath(path)
         if not os.path.exists(self.__path__):
@@ -17,8 +22,8 @@ class mytinylog:
         fileHandler = RotatingFileHandler(
             self.log_file, mode='a', maxBytes=1e6, backupCount=5)
         fileHandler.setFormatter(formatter)
-        streamHandler = logging.StreamHandler()
+        streamHandler = logging.StreamHandler(dev_out)
         streamHandler.setFormatter(formatter)
-        self.log.setLevel(level)
+        self.log.setLevel(levels[level])
         self.log.addHandler(fileHandler)
         self.log.addHandler(streamHandler)
