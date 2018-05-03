@@ -64,7 +64,7 @@ class polls:
         try:
             data = nicehash.get_api(self.api)
             self.stats = nicehash.parse_stats(data)
-        except IOError:
+        except:
             if self.stats is None:
                 self.log.warning('retrying API in 5 seconds')
                 time.sleep(5)
